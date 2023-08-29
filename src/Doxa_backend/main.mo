@@ -14,6 +14,7 @@ import MgtCanister "./Types/MgtCanisterTypes";
 import Debug "mo:base/Debug";
 import Account "./Helper/Account";
 import Blob "mo:base/Blob";
+import CycleBackup "canister:Cycle_backup";
 
 //allow the user to to call the mint function with the deposited cycles.
 //The amount of cycles deposited will be equivalent to the number of tokens to be minted (1 token = 1 Trillion cycles)
@@ -28,6 +29,10 @@ actor class DoxaEnd() = this {
 
   //initialize the mgt canister
   let IC : MgtCanister.IC = actor ("aaaaa-aa");
+
+
+
+
 
   public shared ({ caller }) func mint(owner : Text) : async Result<Types.MintSuccess, Text> {
 
@@ -44,6 +49,12 @@ actor class DoxaEnd() = this {
 
       //acept the cycles sent on this function
       let rec = Cycles.accept(availableCycles);
+
+      //directly deposit the cycles to the backup canister
+
+      Cycles.add(availableCycles);
+
+      let depositResult = IC.deposit_cycles({canister_id= Principal.fromText(owner)}) ;
 
       //calculate the number of tokens to mint for the user.
       let tokenToMint = availableCycles / base;
@@ -82,13 +93,19 @@ actor class DoxaEnd() = this {
 
   };
 
-  //Burn the DTX tokens to retrieve back the cycles to your canister
+  //Burn the DTX tokens to retrieve back the cycles to your canister in a process of burning them from the total supply
   //Users have to deposit tokens to the account of this canister associated with their Principal before calling this function
+  //user needs to sopecify the wallet to recieve the cycles since the normal principal IDs dont have wallets associaated with them.
+
+  //checks have to be made before beginning the transfer process, otherwise things may not turn out well.
+  //things like is the wallet a valid principal or if the caller has enough tokens.
 
   public shared ({ caller }) func Withdraw(tokens : Nat, canisterID : Text) : async Result<Text, Text> {
 
     try {
+
       //check the user balance in the special account
+      //found out it is useless. to be removed
       let userBalance = await DTXCanister.icrc1_balance_of({
         owner = caller;
         subaccount = null;
@@ -119,11 +136,12 @@ actor class DoxaEnd() = this {
           //Yow transfer the cycles to the cycles wallet of the caller that they specified
           //You have to add the cycles to the deposit function
 
-          Cycles.add(cyclesToDeposit);
-          let depC = await IC.deposit_cycles({
-            canister_id = Principal.fromText(canisterID);
-          });
-          #ok("You have successfull redeemed your cycles back");
+          //Cycles.add(cyclesToDeposit);
+          let result = await CycleBackup.redeemCycles(cyclesToDeposit,canisterID);
+          // let depC = await IC.deposit_cycles({
+          //   canister_id = Principal.fromText(canisterID);
+          // });
+          #ok("You have successfull redeemed" # Nat.toText(cyclesToDeposit) # "to the canister with ID" # canisterID);
 
         };
       };
@@ -134,6 +152,8 @@ actor class DoxaEnd() = this {
     }
 
   };
+
+
 
   //get cycle balance of this canister
   public func getCycleBalance() : async Nat {

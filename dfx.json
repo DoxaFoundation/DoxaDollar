@@ -3,6 +3,11 @@
     "Doxa_backend": {
       "main": "src/Doxa_backend/main.mo",
       "type": "motoko",
+      "dependencies": ["DTX", "Cycle_backup"]
+    },
+    "Cycle_backup": {
+      "main": "src/Doxa_backend/cycles.mo",
+      "type": "motoko",
       "dependencies": ["DTX"]
     },
     "DTX": {
@@ -11,16 +16,11 @@
       "candid": "./Files/icrc1-ledger.did"
     },
     "Doxa_frontend": {
-      "dependencies": [
-        "Doxa_backend"
-      ],
+      "dependencies": ["Doxa_backend"],
       "frontend": {
         "entrypoint": "src/Doxa_frontend/src/index.html"
       },
-      "source": [
-        "src/Doxa_frontend/assets",
-        "dist/Doxa_frontend/"
-      ],
+      "source": ["src/Doxa_frontend/assets", "dist/Doxa_frontend/"],
       "type": "assets"
     }
   },
