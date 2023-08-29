@@ -19,11 +19,14 @@ let ownerCanister : Text = "cpmcr-yeaaa-aaaaa-qaala-cai";
         let result = IC.deposit_cycles({canister_id = Principal.fromText(canisterID)});
 
         return #ok("Deposit successful")
+    };
 
+    //get the total cycle balance inside the canister
 
+    public shared({caller}) func getCycleBalance() : async Result.Result<Nat,Text>{
+      if(Principal.toText(caller) != ownerCanister) return #err("You are not authorized");
 
-
-
+      return #ok(Cycles.balance())
 
     }
 
