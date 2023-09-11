@@ -25,7 +25,7 @@ actor class DoxaEnd() = this {
   type Result<E, T> = Types.Result<E, T>;
 
   //All cycles deposites should be above this number(1 trillion).
-  let base : Nat = 1000000000000;
+  let base : Nat = 625000000;
 
   //initialize the mgt canister
   let IC : MgtCanister.IC = actor ("aaaaa-aa");

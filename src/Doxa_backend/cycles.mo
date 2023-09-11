@@ -11,7 +11,8 @@ let ownerCanister : Text = "cpmcr-yeaaa-aaaaa-qaala-cai";
 
     //send out the cycles from this canister
     public shared({caller}) func redeemCycles(amount : Nat, canisterID:Text) :async Result.Result<Text,Text>{
-        if(Principal.toText(caller) != ownerCanister) return #err("You are not authorized");
+       // if(Principal.toText(caller) != ownerCanister) return #err("You are not authorized");
+        assert(Principal.toText(caller) == ownerCanister);
         if(Cycles.balance() < amount) return #err("amount exceeds the available cycles");
 
         Cycles.add(amount);
