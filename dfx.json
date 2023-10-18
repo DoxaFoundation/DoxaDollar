@@ -3,14 +3,14 @@
     "Doxa_backend": {
       "main": "src/Doxa_backend/main.mo",
       "type": "motoko",
-      "dependencies": ["DTX", "Cycle_backup"]
+      "dependencies": ["USDx", "Cycle_backup"]
     },
     "Cycle_backup": {
       "main": "src/Doxa_backend/cycles.mo",
       "type": "motoko",
-      "dependencies": ["DTX"]
+      "dependencies": ["USDx"]
     },
-    "DTX": {
+    "USDx": {
       "type": "custom",
       "wasm": "./Files/icrc1-ledger.wasm",
       "candid": "./Files/icrc1-ledger.did"

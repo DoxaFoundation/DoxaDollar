@@ -5,7 +5,7 @@ import Int "mo:base/Int";
 import Hex "./Helper/Hex";
 import Iter "mo:base/Iter";
 import Cycles "mo:base/ExperimentalCycles";
-import DTXCanister "canister:DTX";
+import DTXCanister "canister:USDx";
 import Error "mo:base/Error";
 import Result "mo:base/Result";
 import Nat "mo:base/Nat";
@@ -16,9 +16,6 @@ import Account "./Helper/Account";
 import Blob "mo:base/Blob";
 import CycleBackup "canister:Cycle_backup";
 
-//allow the user to to call the mint function with the deposited cycles.
-//The amount of cycles deposited will be equivalent to the number of tokens to be minted (1 token = 1 Trillion cycles)
-//Users can also withdraw their cycles by calling the withdraw function specifying the amount of tokens they want to withdraw
 
 actor class DoxaEnd() = this {
 
@@ -29,10 +26,6 @@ actor class DoxaEnd() = this {
 
   //initialize the mgt canister
   let IC : MgtCanister.IC = actor ("aaaaa-aa");
-
-
-
-
 
   public shared ({ caller }) func mint(owner : Text) : async Result<Types.MintSuccess, Text> {
 
