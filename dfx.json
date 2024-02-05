@@ -3,24 +3,34 @@
     "Doxa_backend": {
       "main": "src/Doxa_backend/main.mo",
       "type": "motoko",
-      "dependencies": ["USDx", "Cycle_backup"]
+      "dependencies": [
+        "USDx",
+        "Cycle_backup"
+      ]
     },
     "Cycle_backup": {
       "main": "src/Doxa_backend/cycles.mo",
       "type": "motoko",
-      "dependencies": ["USDx"]
+      "dependencies": [
+        "USDx"
+      ]
     },
     "USDx": {
       "type": "custom",
-      "wasm": "./Files/icrc1-ledger.wasm",
-      "candid": "./Files/icrc1-ledger.did"
+      "candid": "src/icrc1_ledger_canister/ledger.did",
+      "wasm": "src/icrc1_ledger_canister/ic-icrc1-ledger.wasm.gz"
     },
     "Doxa_frontend": {
-      "dependencies": ["Doxa_backend"],
+      "dependencies": [
+        "Doxa_backend"
+      ],
       "frontend": {
         "entrypoint": "src/Doxa_frontend/src/index.html"
       },
-      "source": ["src/Doxa_frontend/assets", "dist/Doxa_frontend/"],
+      "source": [
+        "src/Doxa_frontend/assets",
+        "dist/Doxa_frontend/"
+      ],
       "type": "assets"
     }
   },
